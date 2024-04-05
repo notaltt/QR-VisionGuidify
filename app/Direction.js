@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { TextInput, View, TouchableOpacity, Text, StyleSheet, ScrollView } from 'react-native';
 
-const Direction = ({navigation}) => {
+const Direction = ({ navigation }) => {
     const [countInput, setCountInput] = useState(1);
     const [inputFields, setInputFields] = useState([{ id: countInput, placeholder: 'Input ' + countInput, text: '' }]);
 
@@ -13,10 +13,11 @@ const Direction = ({navigation}) => {
     };
 
     const generateBarcode = () => {
-        const instructions = inputFields.map(input => input.text).join('","');
-        const output = `instruction: {"${instructions}"}`;
+        const instructions = inputFields.map(input => input.text);
+        const output = `instruction: {${instructions.map(ins => `"${ins}"`).join(',')}}`;
+        console.log(output);
 
-        navigation.navigate('Generated QR Code', {value: output});
+        navigation.navigate('Generated QR Code', { value: 'DIRECTION ' + output });
     };
 
     return (
@@ -93,4 +94,5 @@ const styles = StyleSheet.create({
 });
 
 export default Direction;
+
 

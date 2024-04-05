@@ -8,15 +8,9 @@ const Information = ({navigation}) => {
     const [buildingInfo, setBuildingInfo] = useState('');
 
     const generateBarcode = () => {
-        const output = {
-            'BUILDING INFORMATION': {
-                'buildingName':buildingName,
-                'buildingNo':buildingNo,
-                'buildingInfo':buildingInfo,
-            },
-        };
-
-        navigation.navigate('Generated QR Code', { value: JSON.stringify(output) });
+        const output = `BUILDING INFORMATION: ${buildingName}, ${buildingNo}, ${buildingInfo}`;
+        console.log(output);
+        navigation.navigate('Generated QR Code', { value: 'INFORMATION ' + output });
     };
 
     return (

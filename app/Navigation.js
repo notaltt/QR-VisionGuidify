@@ -34,23 +34,20 @@ const Information = ({ navigation }) => {
     };
 
     const getOutput = () => {
-        const output = {
-            "QR LOCATION": {
-                "building": qrLocation,
-            },
-        };
+        let outputString = '';
+
+        outputString += `QR LOCATION: building=${qrLocation}\n`;
 
         directionField.forEach(direction => {
             const directionKey = `DIRECTION ${direction.id}`;
-            const directionValue = {
-                "building": direction.building,
-                "instructions": direction.instructions.map(instruction => instruction.text),
-            };
-            output[directionKey] = directionValue;
+            outputString += `${directionKey}: building: ${direction.building}, instructions: [${direction.instructions.map(instruction => instruction.text).join(', ')}]\n`;
         });
 
-        navigation.navigate('Generated QR Code', { value: JSON.stringify(output) });
+        console.log(outputString);
+
+        navigation.navigate('Generated QR Code', { value: 'NAVIGATION ' + outputString });
     };
+
 
     return (
         <View style={styles.container}>
