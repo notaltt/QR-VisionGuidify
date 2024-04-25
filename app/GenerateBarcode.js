@@ -9,6 +9,8 @@ import {
   Platform,
   Image,
   Dimensions,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 import ViewShot from 'react-native-view-shot';
 import Share from 'react-native-share';
@@ -18,7 +20,6 @@ const {height} = Dimensions.get('screen');
 
 const GenerateBarcode = ({ route }) => {
   const { value } = route.params;
-  const qrCodeRef = useRef(null);
   const viewShotRef = useRef(null);
   const [imageUri, setImageUri] = useState(null);
 
@@ -29,7 +30,7 @@ const GenerateBarcode = ({ route }) => {
 
     try {
       const qrCodeData = await RNQRGenerator.generate({
-        value: value,
+        value: 'VisionGuidify, ' + value,
         height: 300,
         width: 300,
         base64: true,
@@ -39,6 +40,7 @@ const GenerateBarcode = ({ route }) => {
       });
 
       setImageUri({ uri: qrCodeData.uri });
+      console.log('VisionGuidify, ' + value);
     } catch (error) {
       console.log('Error generating QR code:', error);
     }
@@ -85,29 +87,66 @@ const GenerateBarcode = ({ route }) => {
   return (
     <View style={styles.container}>
       <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 1.0 }}>
+      {imageUri ? (
         <Image style={styles.image} source={imageUri} />
+      ) : (
+        <TouchableOpacity style={styles.buttonGenerate} onPress={generateQRCode}>
+          <Text style={styles.buttonTextStyle}>TAP TO GENERATE QR CODE</Text>
+        </TouchableOpacity>
+      )}
       </ViewShot>
-      <Button title="Generate QR Code" onPress={generateQRCode} />
-      <Button title="Save QR Code" onPress={saveAsPng} />
+      <TouchableOpacity style={styles.buttonShare} onPress={saveAsPng}>
+        <Text style={styles.buttonText}>Share QR Code</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#262626',
-    },
-    image: {
-        backgroundColor: '#F3F3F3',
-        width: height / 3,
-        height: height / 3,
-        borderWidth: StyleSheet.hairlineWidth,
-        marginBottom: 16,
-      },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#262626',
+  },
+  image: {
+    backgroundColor: '#F3F3F3',
+    width: 300,
+    height: 300,
+    borderWidth: StyleSheet.hairlineWidth,
+    marginBottom: 16,
+  },
+  buttonGenerate: {
+    backgroundColor: 'white',
+    width: height / 3,
+    height: height / 3,
+    borderWidth: StyleSheet.hairlineWidth,
+    marginBottom: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+  },
+  buttonTextStyle: {
+    fontSize: 30,
+    color: 'black',
+    textAlign: 'center',
+  },
+  buttonShare: {
+    backgroundColor: 'black',
+    borderColor: '#ffff',
+    borderRadius: 50,
+    marginTop: 10,
+    paddingTop: 30,
+    paddingBottom: 30,
+    paddingStart: 55,
+    paddingEnd: 55,
+  },
+  buttonText: {
+    color: '#ffff',
+    fontSize: 24,
+  }
 });
+
 
 export default GenerateBarcode;

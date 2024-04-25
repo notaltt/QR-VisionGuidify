@@ -14,10 +14,10 @@ const Direction = ({ navigation }) => {
 
     const generateBarcode = () => {
         const instructions = inputFields.map(input => input.text);
-        const output = `instruction: {${instructions.map(ins => `"${ins}"`).join(',')}}`;
-        console.log(output);
+        const output = `${instructions.map(ins => ins).join(', ')}`;
+        console.log('DIRECTION, ' + output);
 
-        navigation.navigate('Generated QR Code', { value: 'DIRECTION ' + output });
+        navigation.navigate('Generated QR Code', { value: 'DIRECTION, ' + output });
     };
 
     return (

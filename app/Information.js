@@ -1,16 +1,27 @@
 /* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { ErrorMessage, ConfirmMessage } from './messages';
 
 const Information = ({navigation}) => {
     const [buildingName, setBuildingName] = useState('');
     const [buildingNo, setBuildingNo] = useState('');
     const [buildingInfo, setBuildingInfo] = useState('');
+    const [confirmMessage, setConfirmMessage] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(false);
 
     const generateBarcode = () => {
-        const output = `BUILDING INFORMATION: ${buildingName}, ${buildingNo}, ${buildingInfo}`;
-        console.log(output);
-        navigation.navigate('Generated QR Code', { value: 'INFORMATION ' + output });
+        const output = `${buildingName}, ${buildingNo}, ${buildingInfo}`;
+        console.log('INFORMATION, ' + output);
+        navigation.navigate('Generated QR Code', { value: 'INFORMATION, ' + output });
+    };
+
+    const handleSubmit = () => {
+        if (!buildingName.trim()){
+            setErrorMessage(true);
+        } else {
+            setConfirmMessage(true);
+        }
     };
 
     return (
@@ -23,6 +34,7 @@ const Information = ({navigation}) => {
                         placeholder={'Building Name'}
                         placeholderTextColor={'white'}
                         onChangeText={text => setBuildingName(text)}
+                        required
                     />
                 </View>
                 <View>
@@ -38,15 +50,28 @@ const Information = ({navigation}) => {
                     <TextInput
                         value={buildingInfo}
                         style={styles.inputStyle}
-                        placeholder={'Building Information'}
+                        placeholder={'Building Information (optional)'}
                         placeholderTextColor={'white'}
                         onChangeText={text => setBuildingInfo(text)}
                     />
                 </View>
             </ScrollView>
-            <TouchableOpacity style={styles.buttonStyle} onPress={generateBarcode}>
+            <TouchableOpacity style={styles.buttonStyle} onPress={() => handleSubmit()}>
                 <Text style={styles.textButton}>Generate Barcode</Text>
             </TouchableOpacity>
+            {confirmMessage && (
+                <ConfirmMessage
+                    message={'Are you sure?'}
+                    onCancel={() => setConfirmMessage(false)}
+                    onConfirm={() => generateBarcode()}
+                />
+            )}
+            {errorMessage && (
+                <ErrorMessage
+                    message={'Opps'}
+                    onOkay={() => setErrorMessage(false)}
+                />
+            )}
         </View>
     );
 };

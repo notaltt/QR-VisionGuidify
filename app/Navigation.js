@@ -36,16 +36,15 @@ const Information = ({ navigation }) => {
     const getOutput = () => {
         let outputString = '';
 
-        outputString += `QR LOCATION: building=${qrLocation}\n`;
+        outputString += `${qrLocation}, `;
 
         directionField.forEach(direction => {
-            const directionKey = `DIRECTION ${direction.id}`;
-            outputString += `${directionKey}: building: ${direction.building}, instructions: [${direction.instructions.map(instruction => instruction.text).join(', ')}]\n`;
+            outputString += `DIRECTION: ${direction.building}, [${direction.instructions.map(instruction => instruction.text).join(', ')}], `;
         });
 
         console.log(outputString);
 
-        navigation.navigate('Generated QR Code', { value: 'NAVIGATION ' + outputString });
+        navigation.navigate('Generated QR Code', { value: 'NAVIGATION, ' + outputString });
     };
 
 
